@@ -36,10 +36,9 @@ jobs:
         env:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          docker exec -u root ci bash -c 'echo "DOCKERHUB_USER: adrienaury" > ~/.dockerhub.yml'
-          docker exec -e DOCKERHUB_TOKEN=${DOCKERHUB_TOKEN} -u root ci bash -c 'echo "DOCKERHUB_PASS: ${DOCKERHUB_TOKEN}" >> ~/.dockerhub.yml'
+          docker exec ci bash -c 'echo "DOCKERHUB_USER: adrienaury" > ~/.dockerhub.yml'
+          docker exec -e DOCKERHUB_TOKEN=${DOCKERHUB_TOKEN} ci bash -c 'echo "DOCKERHUB_PASS: ${DOCKERHUB_TOKEN}" >> ~/.dockerhub.yml'
           docker exec \
-            -u root \
             -w /workspace \
             ci \
             neon -props "{tag: ${CI_ACTION_REF_NAME}, MODULE: github.com/${CI_REPOSITORY,,}, BY: $(echo ${CI_ACTOR} | tr -d '[]'), latest: true}" publish
