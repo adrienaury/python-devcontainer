@@ -6,11 +6,11 @@ FROM docker:${DOCKER_VERSION} AS docker
 FROM python:${PYTHON_VERSION} AS python
 
 ####################################################################################
-## py-devcontainer-ci-alpine stage                                                ##
+## python-devcontainer-ci stage                                                   ##
 ##   contains minimal setup to run on a CI platform                               ##
 ####################################################################################
 
-FROM python:${PYTHON_VERSION}-${DEBIAN_VERSION} AS py-devcontainer-ci-alpine
+FROM python:${PYTHON_VERSION}-${DEBIAN_VERSION} AS python-devcontainer-ci
 
 # Required packages for CI
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
@@ -32,11 +32,11 @@ RUN    groupadd -g 1000 -r vscode \
 USER vscode
 
 ####################################################################################
-## py-devcontainer-slim-alpine stage                                              ##
+## python-devcontainer stage                                                      ##
 ##   contains a slim setup for development usage                                  ##
 ####################################################################################
 
-FROM py-devcontainer-ci-alpine AS py-devcontainer-slim-alpine
+FROM python-devcontainer-ci AS python-devcontainer
 
 USER root
 
