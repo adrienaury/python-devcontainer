@@ -26,10 +26,10 @@ jobs:
           fetch-depth: 0
 
       - name: Build
-        run: docker build --target python-devcontainer-ci -t ci .
+        run: docker build -t ci .
 
       - name: Start services
-        run: docker run -v "$(pwd):/workspace" --name ci --rm -d ci tail -f /dev/null
+        run: docker run -v "$(pwd):/workspace" -v /var/run/docker.sock:/var/run/docker.sock:ro --name ci --rm -d ci tail -f /dev/null
 
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Release
