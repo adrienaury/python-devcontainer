@@ -1,6 +1,6 @@
 ARG DEBIAN_VERSION=bullseye
-ARG PYTHON_VERSION=3.11.0
-ARG DOCKER_VERSION=20.10.21
+ARG PYTHON_VERSION=3
+ARG DOCKER_VERSION=20
 
 FROM docker:${DOCKER_VERSION} AS docker
 FROM python:${PYTHON_VERSION} AS python
@@ -36,7 +36,6 @@ USER vscode
 ##   contains a slim setup for development usage                                  ##
 ####################################################################################
 
-ARG DOCKER_COMPOSE_VERSION=2.12.2
 FROM py-devcontainer-ci-alpine AS py-devcontainer-slim-alpine
 
 USER root
@@ -57,7 +56,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 
 # Docker CLI and docker-compose
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
-RUN wget -O /usr/local/bin/docker-compose -nv https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-linux-x86_64 && \
+RUN wget -O /usr/local/bin/docker-compose -nv https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 && \
     chmod +x /usr/local/bin/docker-compose
 
 USER vscode
