@@ -34,7 +34,7 @@ jobs:
           chmod +x neon
           echo "DOCKERHUB_USER: adrienaury" > ~/.dockerhub.yml
           echo "DOCKERHUB_PASS: ${DOCKERHUB_TOKEN}" >> ~/.dockerhub.yml
-          neon -props "{tag: ${CI_ACTION_REF_NAME}, MODULE: github.com/${CI_REPOSITORY,,}, BY: $(echo ${CI_ACTOR} | tr -d '[]'), latest: true}" publish
+          ./neon -props "{tag: ${CI_ACTION_REF_NAME}, MODULE: github.com/${CI_REPOSITORY,,}, BY: $(echo ${CI_ACTOR} | tr -d '[]'), latest: true}" publish
 
       # - name: Build
       #   run: docker build -t ci .
