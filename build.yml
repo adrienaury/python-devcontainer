@@ -18,28 +18,12 @@ properties:
   latest: false # Do not tag the Docker image with latest, specify othewise with `-props "{latest: true}"`
   snapshot: false # If true, do not upload release when publish target is used
 
-shell: ["zsh", "-c"]
-
 targets:
   help:
     doc: "Print this message"
     steps:
       # - $: 'neon -info' => incorrect order, issue to open
-      - $: |
-          print -P "%BAvailable targets%b"
-          print
-          print -P "%B%F{blue}help%f%b         Print this message"
-          print -P "%B%F{blue}info%f%b         Print build informations"
-          print -P "%B%F{blue}build%f%b        Build docker images locally [info]"
-          print -P "%B%F{blue}release%f%b      Build docker images locally with tagged versions [info→build]"
-          print -P "%B%F{blue}publish%f%b      Publish docker images to Dockerhub [info→build→release]"
-          print
-          print -P "%BExample:%b neon -props '{latest: true}' publish"
-          print
-          print -P "%BTarget dependencies%b"
-          print
-          print -P "→ help"
-          print -P "→ info → build → release → publish"
+      - $: echo TODO
 
   info:
     doc: "Print build informations"
