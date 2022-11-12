@@ -25,20 +25,30 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build
-        run: docker build -t ci .
-
-      - name: Start services
-        run: docker run -v "$(pwd):/workspace" -v /var/run/docker.sock:/var/run/docker.sock:ro --name ci --rm -d ci tail -f /dev/null
-
       - uses: FranzDiebold/github-env-vars-action@v2
-      - name: Release
+      - name: Publish
         env:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          docker exec ci bash -c 'echo "DOCKERHUB_USER: adrienaury" > ~/.dockerhub.yml'
-          docker exec -e DOCKERHUB_TOKEN=${DOCKERHUB_TOKEN} ci bash -c 'echo "DOCKERHUB_PASS: ${DOCKERHUB_TOKEN}" >> ~/.dockerhub.yml'
-          docker exec \
-            -w /workspace \
-            ci \
-            neon -props "{tag: ${CI_ACTION_REF_NAME}, MODULE: github.com/${CI_REPOSITORY,,}, BY: $(echo ${CI_ACTOR} | tr -d '[]'), latest: true}" publish
+          ./scripts/install-neon.sh  1.5.5
+          echo "DOCKERHUB_USER: adrienaury" > ~/.dockerhub.yml
+          echo "DOCKERHUB_PASS: ${DOCKERHUB_TOKEN}" >> ~/.dockerhub.yml
+          neon -props "{tag: ${CI_ACTION_REF_NAME}, MODULE: github.com/${CI_REPOSITORY,,}, BY: $(echo ${CI_ACTOR} | tr -d '[]'), latest: true}" publish
+
+      # - name: Build
+      #   run: docker build -t ci .
+
+      # - name: Start services
+      #   run: docker run -v "$(pwd):/workspace" -v /var/run/docker.sock:/var/run/docker.sock:ro --name ci --rm -d ci tail -f /dev/null
+
+      # - uses: FranzDiebold/github-env-vars-action@v2
+      # - name: Release
+      #   env:
+      #     DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      #   run: |
+      #     docker exec ci bash -c 'echo "DOCKERHUB_USER: adrienaury" > ~/.dockerhub.yml'
+      #     docker exec -e DOCKERHUB_TOKEN=${DOCKERHUB_TOKEN} ci bash -c 'echo "DOCKERHUB_PASS: ${DOCKERHUB_TOKEN}" >> ~/.dockerhub.yml'
+      #     docker exec \
+      #       -w /workspace \
+      #       ci \
+      #       neon -props "{tag: ${CI_ACTION_REF_NAME}, MODULE: github.com/${CI_REPOSITORY,,}, BY: $(echo ${CI_ACTOR} | tr -d '[]'), latest: true}" publish
