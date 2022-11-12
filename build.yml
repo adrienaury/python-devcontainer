@@ -130,14 +130,14 @@ targets:
   # run "neon -props '{latest: true}' build" to include latest tag
   build:
     doc: "Build docker images locally"
-    unless: 'newer(find(".", "build/last-*"), find(".", "Dockerfile*", "**/*.sh", ".zshrc", ".p10k.zsh"))'
+    unless: 'newer(find(".", "~/build/last-*"), find(".", "Dockerfile*", "**/*.sh", ".zshrc", ".p10k.zsh"))'
     depends: "info"
     steps:
       - print: "Executing build target"
         color: cyan
-      - mkdir: "build"
-      - $: "sudo docker build -f Dockerfile -q --iidfile build/last-ci -t ={author}/={project}-ci:local --target ={project}-ci ."
-      - $: "sudo docker build -f Dockerfile -q --iidfile build/last-default -t ={author}/={project}:local --target ={project} ."
+      - mkdir: "~/build"
+      - $: "sudo docker build -f Dockerfile -q --iidfile ~/build/last-ci -t ={author}/={project}-ci:local --target ={project}-ci ."
+      - $: "sudo docker build -f Dockerfile -q --iidfile ~/build/last-default -t ={author}/={project}:local --target ={project} ."
 
   # run "neon -props '{latest: true}' release" to include latest tag
   release:
@@ -154,11 +154,11 @@ targets:
           - $: "sudo docker tag ={author}/={project}-ci:local ={DOCKERHUB_USER}/={project}-ci:v={version_major}"
           - $: "sudo docker tag ={author}/={project}-ci:local ={DOCKERHUB_USER}/={project}-ci:v={version_major}.={version_minor}"
           - $: "sudo docker tag ={author}/={project}-ci:local ={DOCKERHUB_USER}/={project}-ci:v={version_major}.={version_minor}.={version_patch}"
-          - $: "sudo docker images --no-trunc | grep $(cat build/last-ci)"
+          - $: "sudo docker images --no-trunc | grep $(cat ~/build/last-ci)"
           - $: "sudo docker tag ={author}/={project}:local ={DOCKERHUB_USER}/={project}:v={version_major}"
           - $: "sudo docker tag ={author}/={project}:local ={DOCKERHUB_USER}/={project}:v={version_major}.={version_minor}"
           - $: "sudo docker tag ={author}/={project}:local ={DOCKERHUB_USER}/={project}:v={version_major}.={version_minor}.={version_patch}"
-          - $: "sudo docker images --no-trunc | grep $(cat build/last-default)"
+          - $: "sudo docker images --no-trunc | grep $(cat ~/build/last-default)"
         else:
           - print: "Skipping release target (not a release)"
             color: red
